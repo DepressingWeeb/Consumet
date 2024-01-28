@@ -1,4 +1,3 @@
-node_modules
 README.md
 Dockerfile
 .dockerignore
@@ -7,3 +6,4 @@ Dockerfile
 /.vscode
 .env
 .envrc
+node_modules
