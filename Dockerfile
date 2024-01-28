@@ -33,7 +33,7 @@ COPY --chown=nodejs:nodejs package*.json ./
 
 # install dependencies here, for better reuse of layers
 
-RUN npm cache clean --force && chmod -R a+x node_modules
+RUN npm cache clean --force
 
 # copy all sources in the container (exclusions in .dockerignore file)
 COPY --chown=nodejs:nodejs . .
