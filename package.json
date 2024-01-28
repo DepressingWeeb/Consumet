@@ -12,10 +12,10 @@
         "node": ">=12.5.0",
         "yarn": ">=1.17.3"
     },
-    "repository": {
-      "type": "git",
-      "url": "git+https://github.com/DepressingWeeb/consumet.ts.git"
-    },
+  "repository": {
+    "type": "git",
+    "url": "github:DepressingWeeb/consumet.ts"
+  },
     "author": "prince-ao <princead@tutanota.com>",
     "license": "MIT",
     "bugs": {
@@ -23,7 +23,7 @@
     },
     "homepage": "https://github.com/consumet/consumet.ts#readme",
   "dependencies": {
-    "@consumet/extensions": "git+https://github.com/DepressingWeeb/consumet.ts.git",
+    "@consumet/extensions": "github:DepressingWeeb/consumet.ts",
     "@fastify/cors": "^8.2.0",
     "@types/fastify-cors": "^2.1.0",
     "@types/node": "^18.11.17",
