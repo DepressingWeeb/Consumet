@@ -10,7 +10,7 @@ RUN apt-get update && apt-get upgrade -y && apt-get autoclean -y && apt-get auto
 RUN groupadd -r nodejs && useradd -g nodejs -s /bin/bash -d /home/nodejs -m nodejs
 USER nodejs
 # set right (secure) folder permissions
-RUN mkdir -p /home/nodejs/app/node_modules && chown -R nodejs:nodejs /home/nodejs/app
+RUN mkdir -p chown -R nodejs:nodejs /home/nodejs/app
 
 WORKDIR /home/nodejs/app
 
@@ -33,11 +33,10 @@ COPY --chown=nodejs:nodejs package*.json ./
 
 # install dependencies here, for better reuse of layers
 
-RUN npm cache clean --force && chmod -R a+x node_modules && chmod -R a+x src
+RUN npm cache clean --force && chmod -R a+x node_modules
 
 # copy all sources in the container (exclusions in .dockerignore file)
 COPY --chown=nodejs:nodejs . .
-
 # build/pack binaries from sources
 
 # This results in a single layer image
