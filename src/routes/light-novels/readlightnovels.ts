@@ -1,9 +1,9 @@
 import { FastifyRequest, FastifyReply, FastifyInstance, RegisterOptions } from 'fastify';
 import { LIGHT_NOVELS } from '@consumet/extensions';
+import { LightNovelSortBy } from '@consumet/extensions/dist/models/types';
 
 const routes = async (fastify: FastifyInstance, options: RegisterOptions) => {
   const readlightnovels = new LIGHT_NOVELS.ReadLightNovels();
-
   fastify.get('/', (_, rp) => {
     rp.status(200).send({
       intro:
@@ -15,8 +15,8 @@ const routes = async (fastify: FastifyInstance, options: RegisterOptions) => {
 
   fastify.get('/:query', async (request: FastifyRequest, reply: FastifyReply) => {
     const query = (request.params as { query: string }).query;
-
-    const res = await readlightnovels.search(query);
+    const page = (request.query as { page: number }).page || 1;
+    const res = await readlightnovels.search(query,page);
 
     reply.status(200).send(res);
   });
@@ -57,6 +57,112 @@ const routes = async (fastify: FastifyInstance, options: RegisterOptions) => {
       const res = await readlightnovels
         .fetchChapterContent(chapterId)
         .catch((err) => reply.status(404).send(err));
+
+      reply.status(200).send(res);
+    } catch (err) {
+      reply
+        .status(500)
+        .send({ message: 'Something went wrong. Please try again later.' });
+    }
+  });
+
+  fastify.get('/new-novels', async (request: FastifyRequest, reply: FastifyReply) => {
+    const page = (request.query as { page: number }).page || 1;
+    try {
+      const res = await readlightnovels
+        .fetchNewNovels(page)
+        .catch((err) => reply.status(404).send({ message: err }));
+
+      reply.status(200).send(res);
+    } catch (err) {
+      reply
+        .status(500)
+        .send({ message: 'Something went wrong. Please try again later.' });
+    }
+  });
+
+  fastify.get('/latest-release', async (request: FastifyRequest, reply: FastifyReply) => {
+    const page = (request.query as { page: number }).page || 1;
+    try {
+      const res = await readlightnovels
+        .fetchLatestRelease(page)
+        .catch((err) => reply.status(404).send({ message: err }));
+
+      reply.status(200).send(res);
+    } catch (err) {
+      reply
+        .status(500)
+        .send({ message: 'Something went wrong. Please try again later.' });
+    }
+  });
+
+  fastify.get('/most-popular', async (request: FastifyRequest, reply: FastifyReply) => {
+    const page = (request.query as { page: number }).page || 1;
+    try {
+      const res = await readlightnovels
+        .fetchMostPopular(page)
+        .catch((err) => reply.status(404).send({ message: err }));
+
+      reply.status(200).send(res);
+    } catch (err) {
+      reply
+        .status(500)
+        .send({ message: 'Something went wrong. Please try again later.' });
+    }
+  });
+
+  fastify.get('/completed-novels', async (request: FastifyRequest, reply: FastifyReply) => {
+    const page = (request.query as { page: number }).page || 1;
+    try {
+      const res = await readlightnovels
+        .fetchCompleteNovels(page)
+        .catch((err) => reply.status(404).send({ message: err }));
+
+      reply.status(200).send(res);
+    } catch (err) {
+      reply
+        .status(500)
+        .send({ message: 'Something went wrong. Please try again later.' });
+    }
+  });
+
+  fastify.get('/genre/:genreID', async (request: FastifyRequest, reply: FastifyReply) => {
+    const genreID = (request.params as { genreID: string }).genreID;
+    const page = (request.query as { page: number }).page || 1;
+    const sortBy = (request.query as { sortBy: string }).sortBy || 'new';
+    let checkSortBy : LightNovelSortBy;
+    switch(sortBy){
+      case 'new':
+        checkSortBy=LightNovelSortBy.NEW;
+        break;
+      case 'most-read':
+        checkSortBy=LightNovelSortBy.MOST_READ;
+        break;
+      case 'completed':
+        checkSortBy=LightNovelSortBy.COMPLETED;
+        break;
+      default:
+        checkSortBy=LightNovelSortBy.NEW;
+        break;
+    }
+    try {
+      const res = await readlightnovels
+        .fetchGenreNovels(genreID,page,checkSortBy)
+        .catch((err) => reply.status(404).send({ message: err }));
+
+      reply.status(200).send(res);
+    } catch (err) {
+      reply
+        .status(500)
+        .send({ message: 'Something went wrong. Please try again later.' });
+    }
+  });
+
+  fastify.get('/genre-list', async (request: FastifyRequest, reply: FastifyReply) => {
+    try {
+      const res = await readlightnovels
+        .fetchGenreList()
+        .catch((err) => reply.status(404).send({ message: err }));
 
       reply.status(200).send(res);
     } catch (err) {
