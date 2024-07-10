@@ -39,6 +39,8 @@ const routes = async (fastify: FastifyInstance, options: RegisterOptions) => {
     }
   });
 
+  
+
   fastify.get(
     '/read/:chapterId',
     async (request: FastifyRequest, reply: FastifyReply) => {
@@ -47,6 +49,71 @@ const routes = async (fastify: FastifyInstance, options: RegisterOptions) => {
       try {
         const res = await mangadex.fetchChapterPages(chapterId);
 
+        reply.status(200).send(res);
+      } catch (err) {
+        reply
+          .status(500)
+          .send({ message: 'Something went wrong. Please try again later.' });
+      }
+    },
+  );
+
+  fastify.get(
+    '/recently-added',
+    async (request: FastifyRequest, reply: FastifyReply) => {
+      const page = (request.query as { page: number }).page;
+      const limit = (request.query as { limit: number }).limit || 20;
+      try {
+        const res = await mangadex.fetchRecentlyAdded(page,limit);
+
+        reply.status(200).send(res);
+      } catch (err) {
+        reply
+          .status(500)
+          .send({ message: 'Something went wrong. Please try again later.' });
+      }
+    },
+  );
+
+  fastify.get(
+    '/popular',
+    async (request: FastifyRequest, reply: FastifyReply) => {
+      const page = (request.query as { page: number }).page;
+      const limit = (request.query as { limit: number }).limit || 20;
+      try {
+        const res = await mangadex.fetchPopular(page,limit);
+
+        reply.status(200).send(res);
+      } catch (err) {
+        reply
+          .status(500)
+          .send({ message: 'Something went wrong. Please try again later.' });
+      }
+    },
+  );
+
+  fastify.get(
+    '/latest-update',
+    async (request: FastifyRequest, reply: FastifyReply) => {
+      const page = (request.query as { page: number }).page;
+      const limit = (request.query as { limit: number }).limit || 20;
+      try {
+        const res = await mangadex.fetchLatestUpdates(page,limit);
+
+        reply.status(200).send(res);
+      } catch (err) {
+        reply
+          .status(500)
+          .send({ message: 'Something went wrong. Please try again later.' });
+      }
+    },
+  );
+  
+  fastify.get(
+    '/random',
+    async (request: FastifyRequest, reply: FastifyReply) => {
+      try {
+        const res = await mangadex.fetchRandom();
         reply.status(200).send(res);
       } catch (err) {
         reply
